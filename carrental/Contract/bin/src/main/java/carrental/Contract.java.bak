@@ -1,0 +1,74 @@
+package carrental;
+
+import javax.persistence.*;
+import org.springframework.beans.BeanUtils;
+import java.util.List;
+import java.util.Date;
+
+@Entity
+@Table(name="Contract_table")
+public class Contract {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private String id;
+    private String custName;
+    private String modelName;
+    private Integer amt;
+
+    @PostPersist
+    public void onPostPersist(){
+        ContractCompleted contractCompleted = new ContractCompleted();
+        BeanUtils.copyProperties(this, contractCompleted);
+        contractCompleted.publishAfterCommit();
+
+        //Following code causes dependency to external APIs
+        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
+
+        carrental.external.Pay pay = new carrental.external.Pay();
+        // mappings goes here
+        Application.applicationContext.getBean(carrental.external.PayService.class)
+            .pay(pay);
+
+    }
+    @PostUpdate
+    public void onPostUpdate(){
+        ContractCanceled contractCanceled = new ContractCanceled();
+        BeanUtils.copyProperties(this, contractCanceled);
+        contractCanceled.publishAfterCommit();
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getCustName() {
+        return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+    public Integer getAmt() {
+        return amt;
+    }
+
+    public void setAmt(Integer amt) {
+        this.amt = amt;
+    }
+
+
+
+
+}
