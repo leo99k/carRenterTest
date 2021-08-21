@@ -1,0 +1,82 @@
+-- 카프카 실행
+먼저 주키퍼 부터 실행
+
+cd C:\kafka_2.12-2.8.0\bin\windows
+zookeeper-server-start.bat ../../config/zookeeper.properties
+
+cd C:\kafka_2.12-2.8.0\bin\windows
+kafka-server-start.bat ../../config/server.properties
+
+
+
+
+-- 메이븐 실행
+
+cd C:\projects\carrental\Contract
+mvn spring-boot:run
+
+cd C:\projects\carrental\Pay
+mvn spring-boot:run
+
+cd C:\projects\carrental\Reservation
+mvn spring-boot:run
+
+cd C:\projects\carrental\Mypage
+mvn spring-boot:run
+
+cd C:\projects\carrental\gateway
+mvn spring-boot:run
+
+
+
+-- 실행
+http GET http://localhost:8081/contracts
+http GET http://localhost:8082/pays
+http GET http://localhost:8083/reservations
+http GET http://localhost:8084/myPages
+
+
+-- 예약생성
+http POST http://localhost:8081/contracts custName="고객1" modelName="쏘나타" amt=100
+
+http POST http://localhost:8081/contracts custName="고객2" modelName="아반떼" amt=200
+
+http POST http://localhost:8081/contracts custName="고객3" modelName="그랜저" amt=300
+
+http POST http://localhost:8081/contracts custName="고객4" modelName="그랜저" amt=400
+
+
+
+http PATCH http://localhost:8081/contracts/1 custName="고객1" modelName="쏘나타" amt=0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 실행
+http GET http://localhost:8082/
+
+
+http POST http://localhost:8081/contracts custName="김성우" modelName="그랜다이저" amt=100
+
+http POST http://localhost:8081/contracts custName="홍길동" carModel="쏘나타"
+
+http POST http://localhost:8081/contracts custName="채치수" carModel="에쿠스"
+
+
